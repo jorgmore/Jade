@@ -11,7 +11,7 @@ import jade.domain.FIPAAgentManagement.ServiceDescription;
 
 import java.util.*;
 
-public class Minero extends Agent {
+public class Minero extends ObservableAgent {
 	private Hashtable catalogo;
 
 	// Put agent initializations here
@@ -29,7 +29,7 @@ public class Minero extends Agent {
 		dfd.setName(getAID());
 		ServiceDescription sd = new ServiceDescription();
 		sd.setType("Venta-libros");
-		sd.setName("Cartera de inversión JADE");
+		sd.setName("Cartera de inversiï¿½n JADE");
 		dfd.addServices(sd);
 		try {
 			DFService.register(this, dfd);
@@ -67,7 +67,7 @@ public class Minero extends Agent {
 		addBehaviour(new OneShotBehaviour() {
 			public void action() {
 				catalogo.put(titulo, new Integer(precio));
-				System.out.println(titulo+" insertado en catálogo. Precio = "+precio);
+				System.out.println(titulo+" insertado en catï¿½logo. Precio = "+precio);
 			}
 		} );
 	}

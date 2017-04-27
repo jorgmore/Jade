@@ -10,7 +10,7 @@ import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 
-public class Explorador extends Agent {
+public class Explorador extends ObservableAgent {
 	// The title of the book to buy
 	private String NombreMineria;
 	// The list of known seller agents
@@ -24,7 +24,7 @@ public class Explorador extends Agent {
 
 			addBehaviour(new TickerBehaviour(this, 10000) {
 				protected void onTick() {
-					System.out.println("Esperando asignación del explorador");
+					System.out.println("Esperando asignaciï¿½n del explorador");
 					// Update the list of seller agents
 					DFAgentDescription template = 
                                                 new DFAgentDescription();
