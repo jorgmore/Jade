@@ -1,0 +1,22 @@
+package es.ucm.jadedrools
+ 
+import es.ucm.jadedrools.BehExplorador.Mapa;
+ 
+rule "recorridoVacio"
+    when
+        m : Mapa( mapa[0][0] == Mapa.VACIO)
+    then
+        System.out.println("No hay mineral");
+        m.setMatrizRecorrido();
+        update( m );
+end
+
+rule "recorridoMineral"
+    when
+        m : Mapa( mapa[0][1] == Mapa.MINERAL)
+    then
+        System.out.println("Hay mineral!");
+        m.setMatrizMineral();
+        //m.asignarMineros();
+        update( m );
+end
