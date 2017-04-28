@@ -17,5 +17,7 @@ public class Mapa {
 		casillas[x][y].setMineral(m);
 		
 	}
+	
+	
 
 }
