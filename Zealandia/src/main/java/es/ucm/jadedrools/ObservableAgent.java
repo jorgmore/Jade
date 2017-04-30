@@ -4,6 +4,13 @@ import java.util.Vector;
 
 import jade.core.Agent;
 
+/**
+ * Clase de la que deben extender los agentes para poder avisar a la GUI de sus 
+ * acciones.
+ * 
+ * @author rodry
+ *
+ */
 public class ObservableAgent extends Agent {
 	
 	private Vector<AgentObserver> observers;
@@ -21,11 +28,11 @@ public class ObservableAgent extends Agent {
 		
 	}
 	
-	protected void onAgentMove(){
+	protected void onAgentMove(int x, int y){
 		
 		for (AgentObserver ob: observers){
 			
-			ob.onAgentMoved();
+			ob.onAgentMoved(getAID().getName(), x, y);
 			
 		}
 	}

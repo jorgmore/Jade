@@ -18,6 +18,8 @@ public class Casilla {
 	
 	public void setTipo(TipoCasilla tipo){ this.tipo = tipo; }
 	
+	public TipoCasilla getTipo(){ return tipo; }
+	
 	public void setMineral(Mineral m){ minerales.add(m); }
 	// public void deleteMineral( ?? ){  }
 	
