@@ -1,20 +1,69 @@
 package es.ucm.jadedrools
  
-import es.ucm.jadedrools.BehDrools.Message;
- 
-rule "Hello World"
+import es.ucm.jadedrools.mapa.Mapa;
+import es.ucm.jadedrools.mapa.TipoCasilla;
+import es.ucm.jadedrools.mapa.Casilla;
+//import es.ucm.jadedrools.Explorador;
+
+rule "recorridoProhibido"
     when
-        m : Message( status == Message.HELLO, myMessage : message )
+        $mapa : Mapa()
+        $exp : Explorador()
+        m : Mapa( m.getCasilla($mapa.getX(),$mapa.getY()).getTipo().name() == "PROHIBIDA")
     then
-        System.out.println( myMessage );
-        m.setMessage( "Goodbye Jorge Moreno" );
-        m.setStatus( Message.GOODBYE );
+        System.out.println("Prohibido");
+        m.setCasillaRecorrida($mapa.getX(),$mapa.getY());
         update( m );
 end
 
-rule "GoodBye"
+rule "recorridoNormal"
     when
-        Message( status == Message.GOODBYE, myMessage : message )
+        $mapa : Mapa()
+        //$exp : Explorador()
+        m : Mapa( m.getCasilla($mapa.getX(),$mapa.getY()).getTipo().name() == "NORMAL")
     then
-        System.out.println( myMessage );
+        System.out.println("Normal");
+        m.setCasillaRecorrida($mapa.getX(),$mapa.getY());
+        
+        //Si hay algun mineral
+        if(m.getCasilla($mapa.getX(),$mapa.getY()).getMinerales().size() > 0){
+           for(int i=0; i< m.getCasilla($mapa.getX(),$mapa.getY()).getMinerales().size(); i++){
+		      System.out.println("mineral: "+m.getCasilla($mapa.getX(),$mapa.getY()).getMinerales().elementAt(i).getTipo() );
+		      m.setTieneMineral(true);
+    	   }
+        }
+        update( m );
 end
+
+rule "recorridoPantanoso"
+    when
+      //  $beh : BehExplorador()
+        $mapa : Mapa()
+        m : Mapa( m.getCasilla($mapa.getX(),$mapa.getY()).getTipo().name() == "PANTANOSO")
+    then
+        System.out.println("Pantanoso");
+        m.setCasillaRecorrida($mapa.getX(),$mapa.getY());
+        
+        //Si hay algun mineral
+        if(m.getCasilla($mapa.getX(),$mapa.getY()).getMinerales().size() > 0){
+	        for(int i=0; i< m.getCasilla($mapa.getX(),$mapa.getY()).getMinerales().size(); i++){
+			   System.out.println("mineral: "+m.getCasilla($mapa.getX(),$mapa.getY()).getMinerales().elementAt(i).getTipo() );
+			   m.setTieneMineral(true);
+	    	}
+        }
+        update( m );
+end
+
+/*
+rule "recorridoMineral"
+    when
+        //m : Mapa( mapa[1][1] == Mapa.MINERAL)
+        $pos : Mapa()
+        m : Mapa( $pos.getPos() == Mapa.MINERAL)
+    then
+        System.out.println("Hay mineral!");
+        m.setMatrizMineral();
+        //m.asignarMineros();
+        update( m );
+end
+*/
