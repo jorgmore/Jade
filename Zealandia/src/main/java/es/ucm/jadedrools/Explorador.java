@@ -73,14 +73,16 @@ public class Explorador extends Agent {
       	            coords[0] = (int) this.coordInicial1;
       	  		    coords[1] = (int) this.coordInicial2;
               	}
-        		    existe = false;
+    		    existe = false;
+    		    //System.out.print(coords[0]+" "); 
+      		    //System.out.println(coords[1]);
         		  
         		   //Se chequea si existen las coordenadas en la lista de coordenadas
         		   for(int i=0; i<listaCoords.size(); i++){
             		 if (listaCoords.get(i)[0] == coords[0] && listaCoords.get(i)[1] == coords[1]) {
        			        existe = true;
        			     }
-                 }
+                   }
         		  
         		   if(existe == false){
         			  listaCoords.add(coords);
@@ -89,18 +91,13 @@ public class Explorador extends Agent {
         			  
         			  if(mapa.getTieneMineral() == true){//Si hay mineral, enviar al minero msj
         				 System.out.println("HAY MINERAL!!");
-        				 //addBehaviour(new TickerBehaviour(this, 1000) {
-        				//	protected void onTick() {
-        			  for(int i=0; i< mapa.getCasilla(mapa.getX(),mapa.getY()).getMinerales().size(); i++){
+        			    for(int i=0; i< mapa.getCasilla(mapa.getX(),mapa.getY()).getMinerales().size(); i++){
         				    mineral += mineral+mapa.getCasilla(mapa.getX(),mapa.getY()).getMinerales().elementAt(i).getTipo();
-        				   //ExploradorMensaje expl = new ExploradorMensaje(coords[0],coords[1], mineral);
-      		     	       //addBehaviour(new ExploradorMensaje(coords[0],coords[1], mineral, mapa, coordInicial1, coordInicial2) );
         				    System.out.println(getLocalName() +": Preparandose para enviar un mensaje a mineros");
-        		            //ESTO HAY QUE HACERLO CON UN FOR, EL CUAL DEPENDE DE CUANTOS AGENTES RECEPTORES HAYAN
         		            AID id = new AID();
         		            id.setLocalName("minero1");
         		            
-        		            ////AID id2 = new AID();
+        		            //AID id2 = new AID();
         		            //id2.setLocalName("minero2");
         		 
         		            // Creación del objeto ACLMessage
@@ -121,7 +118,7 @@ public class Explorador extends Agent {
         		            //Envia el mensaje a los destinatarios
         		            send(mensaje);
         		           // send(mensaje2);
-        		            //block();
+
         		          //Espera la respuesta
         		            ACLMessage mensajeRecibido = blockingReceive();
         		            if (mensajeRecibido!= null)
@@ -130,16 +127,13 @@ public class Explorador extends Agent {
         		                System.out.println(mensajeRecibido.toString());
         		                fin = true;
         		            }
+        			    }
         			  }
-        				//	}
-        				// } );
-        			  }
-        			 // System.out.println("Mineral TIENE: "+mapa.getTieneMineral());
         		   }
               }
             
         }
- /*
+        /*
         public boolean done()
         {
             return fin;

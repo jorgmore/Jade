@@ -14,64 +14,61 @@ import java.util.*;
 
 public class Minero extends Agent {
 	
-	class MineroReceptorMensaje extends SimpleBehaviour
+	class MineroReceptorMensaje extends CyclicBehaviour
     {
         private boolean fin = false;
+        //public int x;//posicion del minero en X
+        //public int y;//posicion del minero en Y
+        
         public void action()
         {
             System.out.println(" Preparandose para recibir");
             int coord1;
             int coord2;
             String mineral;
+            
+            Object[] arrayArgumentos = getArguments();//argumentos de la creacion del agente
+            //coords donde empieza el agente
+    		int coordInicial1 = (int)arrayArgumentos[0];
+    		int coordInicial2 = (int)arrayArgumentos[1];
+    		Double distancia = 0.0;
  
             //Obtiene el primer mensaje de la cola de mensajes
-            ACLMessage mensaje = blockingReceive();
+            ACLMessage mensajeExplorador = blockingReceive();
  
-            if (mensaje!= null)
+            if (mensajeExplorador!= null)
             {
-            	String[] coords = mensaje.getContent().toString().split(",");
+            	String[] coords = mensajeExplorador.getContent().toString().split(",");
             	String[] tipomineral = coords[1].toString().split(";");
             	coord1 = Integer.parseInt(coords[0]);//coordenada X del mineral (donde está ahora mismo el explorador)
             	coord2 = Integer.parseInt(tipomineral[0]);//coordenada Y del mineral (donde está ahora mismo el explorador)
             	mineral = tipomineral[1];//Tipo del mineral de dichas coordenadas
             	
+            	int x = Math.abs(coord1 - coordInicial1);
+            	int y = Math.abs(coord2 - coordInicial2);
+            	
+            	distancia = Math.sqrt(x*x + y*y);//la distancia entre 2 puntos (entre el minero1 y el agente explorador)
+            	
 	            System.out.println(getLocalName() + ": acaba de recibir el siguiente mensaje: ");
-	            System.out.println(mensaje.toString());
+	            System.out.println(mensajeExplorador.toString());
 	            
-	         // Envia constestación
+	           // Envia constestación
                 System.out.println(getLocalName() +": Enviando contestacion");
-                ACLMessage respuesta = mensaje.createReply();
+                ACLMessage respuesta = mensajeExplorador.createReply();
                 respuesta.setPerformative( ACLMessage.INFORM );
-                respuesta.setContent( "Bien MSJ RESP" );
+                //respuesta.setContent("Mi posicion: "+coordInicial1+","+coordInicial2);
+                //respuesta.setContent(getLocalName()+";"+distancia+"||"+coord1+","+coord2);
+                respuesta.setContent("Mineral de "+mineral+" en la posicion "+coord1+","+coord2+" explotado");
                 send(respuesta);
-                //System.out.println(getLocalName() +": Enviando Bien a receptor");
-                //System.out.println(respuesta.toString());
-	            
+                
 	            fin = true;
             }
-            //block();
-            
-            /*
-            AID id = new AID();
-            id.setLocalName("explorador1");
- 
-            // RESPUESTA DEL MINERO PARA EXPLORADOR: Creación del objeto ACLMessage
-            ACLMessage mensajeExp = new ACLMessage(ACLMessage.REQUEST);
- 
-           //Rellenar los campos necesarios del mensaje
-            mensajeExp.setSender(getAID());
-            mensajeExp.setLanguage("Español");
-            mensajeExp.addReceiver(id);
-            mensajeExp.setContent("MENSAJE PARA EXPLORADOR");
- 
-           //Envia el mensaje a explorador
-            send(mensajeExp);
-            */
         }
+        /*
         public boolean done()
         {
             return fin;
-        }
+        }*/
     }
     
 	protected void setup()

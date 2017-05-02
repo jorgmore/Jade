@@ -53,7 +53,7 @@ public class StartJadeGUI {
 			mGui.agregarAgenteVisual("minero1", TipoAgente.MINERO, 11, 5, m);
 			ac.start();
 			
-			//ac = cc.createNewAgent("minero2", "es.ucm.jadedrools.Minero", new Object[]{11, 5, m});
+			//ac = cc.createNewAgent("minero2", "es.ucm.jadedrools.Minero", new Object[]{12, 5, m});
 			//mGui.agregarAgenteVisual("minero2", TipoAgente.MINERO, 12, 5, m);
 			//ac.start();
 			
