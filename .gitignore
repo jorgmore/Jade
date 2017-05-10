@@ -1,0 +1,50 @@
+Zealandia/target/*
+Zealandia/.metadata
+Zealandia/bin/
+Zealandia/tmp/
+Zealandia/*.tmp
+Zealandia/*.bak
+Zealandia/*.swp
+Zealandia/*~.nib
+Zealandia/local.properties
+Zealandia/.settings/
+Zealandia/.loadpath
+Zealandia/.recommenders
+
+# External tool builders
+Zealandia/.externalToolBuilders/
+
+# Locally stored "Eclipse launch configurations"
+Zealandia/*.launch
+
+# PyDev specific (Python IDE for Eclipse)
+Zealandia/*.pydevproject
+
+# CDT-specific (C/C++ Development Tooling)
+Zealandia/.cproject
+
+# Java annotation processor (APT)
+Zealandia/.factorypath
+
+# PDT-specific (PHP Development Tools)
+Zealandia/.buildpath
+
+# sbteclipse plugin
+Zealandia/.target
+
+# Tern plugin
+Zealandia/.tern-project
+
+# TeXlipse plugin
+Zealandia/.texlipse
+
+# STS (Spring Tool Suite)
+Zealandia/.springBeans
+
+# Code Recommenders
+Zealandia/.recommenders/
+
+# Scala IDE specific (Scala & Java development for Eclipse)
+Zealandia/.cache-main
+Zealandia/.scala_dependencies
+Zealandia/.worksheet

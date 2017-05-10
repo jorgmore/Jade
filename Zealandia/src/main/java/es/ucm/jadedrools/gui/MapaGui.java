@@ -17,7 +17,7 @@ public class MapaGui extends JPanel implements AgentObserver{
 	private Mapa mapa;
 	private Hashtable<String, AgenteDummy> agentes;
 	
-	private int CASILLA_SIZE = 24;
+	private int CASILLA_SIZE = 36;
 
 	public MapaGui(Mapa m) {
 		
@@ -35,7 +35,7 @@ public class MapaGui extends JPanel implements AgentObserver{
 			
 				switch (mapa.getCasilla(i, j).getTipo()) {
 				case NORMAL:
-					g.setColor(Color.green);
+					g.setColor(new Color(82, 181, 0));
 					break;
 				case PANTANOSO:
 					g.setColor(new Color(145, 104, 21));
@@ -65,7 +65,11 @@ public class MapaGui extends JPanel implements AgentObserver{
 						break;
 					}
 					
-					g.fillOval(i*CASILLA_SIZE + 6, j*CASILLA_SIZE + 6, CASILLA_SIZE/2, CASILLA_SIZE/2);
+					g.fillOval(
+							i*CASILLA_SIZE + CASILLA_SIZE/4, 
+							j*CASILLA_SIZE + CASILLA_SIZE/4, 
+							CASILLA_SIZE/2, 
+							CASILLA_SIZE/2);
 				}
 				
 				ArrayList<AgenteDummy> arr = new ArrayList<>(agentes.values());
@@ -74,7 +78,7 @@ public class MapaGui extends JPanel implements AgentObserver{
 					
 					switch (agente.getTipo()) {
 					case EXPLORADOR:
-						g.setColor(new Color(69, 247, 232));
+						g.setColor(new Color(255, 0, 0));
 						break;
 					case MINERO:
 						g.setColor(new Color(189, 145, 255));
@@ -86,25 +90,39 @@ public class MapaGui extends JPanel implements AgentObserver{
 						break;
 					}
 					
-					g.drawString("X", agente.getX()*CASILLA_SIZE + 6, agente.getY()*CASILLA_SIZE - 6);
+					g.fillRect(
+							agente.getX()*CASILLA_SIZE + CASILLA_SIZE/4, 
+							agente.getY()*CASILLA_SIZE + CASILLA_SIZE/4, 
+							CASILLA_SIZE/2, 
+							CASILLA_SIZE/2);
 					
 				}
 			}
 		}
 	}
 	
-	public void agregarAgenteVisual(String nombreAgente, TipoAgente tipo, int x, int y, Mapa m){
+	public void agregarAgenteVisual(String nombreAgente, TipoAgente tipo, int x, int y){
 		
-		agentes.put(nombreAgente, new AgenteDummy(tipo, x, y, m));
+		agentes.put(nombreAgente, new AgenteDummy(tipo, x, y));
 		
 	}
 	
 	@Override
 	public void onAgentMoved(String nombreAgente, int x, int y) {
 		
-		agentes.get(nombreAgente).setX(x);
-		agentes.get(nombreAgente).setY(y);
-		
+		javax.swing.SwingUtilities.invokeLater(new Runnable() {
+			
+			@Override
+			public void run() {
+				AgenteDummy a = agentes.get(nombreAgente);
+				
+				a.setX(x);
+				a.setY(y);
+				
+				agentes.put(nombreAgente, a);
+				
+				repaint();
+			}
+		});
 	}
-
 }

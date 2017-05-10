@@ -26,6 +26,6 @@ public class Casilla {
 	public Vector<Mineral> getMinerales(){ return minerales; }
 	
 	public void setCasillaRecorrida(){
-		this.tipo = TipoCasilla.RECORRIDA;
+		//this.tipo = TipoCasilla.RECORRIDA;
 	}
 }

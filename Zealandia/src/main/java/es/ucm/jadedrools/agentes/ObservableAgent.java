@@ -1,7 +1,8 @@
-package es.ucm.jadedrools;
+package es.ucm.jadedrools.agentes;
 
 import java.util.Vector;
 
+import es.ucm.jadedrools.AgentObserver;
 import jade.core.Agent;
 
 /**
@@ -13,7 +14,7 @@ import jade.core.Agent;
  */
 public class ObservableAgent extends Agent {
 	
-	private Vector<AgentObserver> observers;
+	protected Vector<AgentObserver> observers;
 	
 	public void registerObserver( AgentObserver observer ){
 		
@@ -28,11 +29,11 @@ public class ObservableAgent extends Agent {
 		
 	}
 	
-	protected void onAgentMove(int x, int y){
+	public void onAgentMove(int x, int y){
 		
 		for (AgentObserver ob: observers){
 			
-			ob.onAgentMoved(getAID().getName(), x, y);
+			ob.onAgentMoved(getName(), x, y);
 			
 		}
 	}

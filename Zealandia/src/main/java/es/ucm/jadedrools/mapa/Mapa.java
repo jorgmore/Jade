@@ -17,17 +17,11 @@ public class Mapa {
 	private Casilla [][]casillas;
 	private int ancho;
 	private int alto;
-	private int x;
-	private int y;
-	private boolean TieneMineral;
 	
-	public Mapa(int ancho, int alto, int x, int y){
+	public Mapa(int ancho, int alto){
 		
 		this.ancho = ancho;
 		this.alto = alto;
-		this.x = x;
-		this.y = y;
-		this.TieneMineral = false;
 		casillas = new Casilla[ancho][alto];
 		
 		for (int i = 0; i < ancho; i++){
@@ -61,23 +55,7 @@ public class Mapa {
 	
 	public int getAlto(){ return alto; }
 	
-	public int getX(){ return x; }
-	
-	public int getY(){ return y; }
-	
-	public void setX(int x){
-		this.x = x;
-	}
-	
-	public void setY(int y){
-		this.y = y;
-	}
-	
 	public Casilla getCasilla(int x, int y){ return casillas[x][y]; }
-	
-	public void setCasillaRecorrida(int x, int y){
-		this.casillas[x][y].setCasillaRecorrida();
-	}
 	
 	public void setMineral(int x, int y, Mineral m){ 
 		
@@ -85,11 +63,9 @@ public class Mapa {
 		
 	}
 	
-	public void setTieneMineral(boolean tiene){
-		this.TieneMineral = tiene;
-	}
-	
-	public boolean getTieneMineral(){
-		return this.TieneMineral;
+	public boolean enRango(int x, int y){
+		
+		return x > 0 && x < ancho && y > 0 && y < alto && casillas[x][y].getTipo() != TipoCasilla.PROHIBIDA;
+		
 	}
 }

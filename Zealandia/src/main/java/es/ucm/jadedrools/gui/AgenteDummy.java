@@ -1,5 +1,4 @@
 package es.ucm.jadedrools.gui;
-import es.ucm.jadedrools.mapa.Mapa;
 
 /**
  * Clase para mostrar los agentes en la GUI.
@@ -12,14 +11,12 @@ public class AgenteDummy {
 	
 	private int x, y;
 	private TipoAgente tipo;
-	private Mapa m;
 
-	public AgenteDummy(TipoAgente tipo, int x, int y, Mapa m){
+	public AgenteDummy(TipoAgente tipo, int x, int y){
 		
 		this.tipo = tipo;
 		this.x = x;
 		this.y = y;
-		this.m = m;
 		
 	}
 
@@ -41,10 +38,5 @@ public class AgenteDummy {
 
 	public TipoAgente getTipo() {
 		return tipo;
-	}
-	
-	public Mapa getMapa() {
-		return this.m;
-	}
-	
+	}	
 }
