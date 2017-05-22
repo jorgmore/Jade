@@ -58,16 +58,16 @@ public class StartJadeGUI {
 			
 			// MINEROS
 			
-			ac = cc.createNewAgent("minero1", MINERO_CLASS, new Object[]{0, 0, m, mGui});
-			mGui.agregarAgenteVisual(ac.getName(), TipoAgente.MINERO, 0, 0);
+			ac = cc.createNewAgent("minero1", MINERO_CLASS, new Object[]{1, 0, m, mGui});
+			mGui.agregarAgenteVisual(ac.getName(), TipoAgente.MINERO, 1, 0);
 			ac.start();
 			
-			ac = cc.createNewAgent("minero2", MINERO_CLASS, new Object[]{0, 0, m, mGui});
-			mGui.agregarAgenteVisual(ac.getName(), TipoAgente.MINERO, 0, 0);
+			ac = cc.createNewAgent("minero2", MINERO_CLASS, new Object[]{0, 1, m, mGui});
+			mGui.agregarAgenteVisual(ac.getName(), TipoAgente.MINERO, 0, 1);
 			ac.start();
 			
-			ac = cc.createNewAgent("minero3", MINERO_CLASS, new Object[]{0, 0, m, mGui});
-			mGui.agregarAgenteVisual(ac.getName(), TipoAgente.MINERO, 0, 0);
+			ac = cc.createNewAgent("minero3", MINERO_CLASS, new Object[]{1, 1, m, mGui});
+			mGui.agregarAgenteVisual(ac.getName(), TipoAgente.MINERO, 1, 1);
 			ac.start();
 			
 		} 

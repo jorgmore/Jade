@@ -26,6 +26,7 @@ public class AvisarMineros extends OneShotBehaviour {
 		// Rellenar los campos necesarios del mensaje
 		mensaje.setSender(explorador.getAID());
 		mensaje.setContent(posX + "," + posY + ",COBRE");
+		mensaje.setConversationId("mina-encontrada");
 		
 		// Sacamos los agentes mineros
 		DFAgentDescription template = new DFAgentDescription();

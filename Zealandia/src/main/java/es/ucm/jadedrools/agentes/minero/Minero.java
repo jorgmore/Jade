@@ -14,21 +14,29 @@ import java.util.*;
 
 import es.ucm.jadedrools.agentes.ObservableAgent;
 import es.ucm.jadedrools.agentes.minero.behaviour.EvaluarDistancia;
+import es.ucm.jadedrools.agentes.minero.behaviour.ExtraerMineral;
+import es.ucm.jadedrools.agentes.minero.behaviour.MovimientoMinero;
 import es.ucm.jadedrools.gui.MapaGui;
 
 public class Minero extends ObservableAgent {
 	
 	private int x;
 	private int y;
-	private boolean ocupado;
+	
+	private int x_objetivo;
+	private int y_objetivo;
+	
+	private EstadoMinero estado;
+	
+	private MessageTemplate mt; // Template para los mensajes que se reciben
 	
 	protected void setup(){
 		
 		Object[] arrayArgumentos = getArguments();//argumentos de la creacion del agente
 		
 		// coords donde empieza el agente
-		x = (int) arrayArgumentos[0];
-		y = (int) arrayArgumentos[1];
+		x = x_objetivo = (int) arrayArgumentos[0];
+		y = y_objetivo = (int) arrayArgumentos[1];
 		
 		MapaGui mGui = (MapaGui)arrayArgumentos[3];
 		
@@ -48,6 +56,8 @@ public class Minero extends ObservableAgent {
 		catch (FIPAException fe) {
 			fe.printStackTrace();
 		}
+		
+		desocupar();
 
         addBehaviour(new RecibirMensaje());
         
@@ -70,91 +80,126 @@ public class Minero extends ObservableAgent {
 	public void setX(int x){ this.x = x; }
 	public void setY(int y){ this.y = y; }
 	
-	public void setOcupado(boolean ocupado){ this.ocupado = ocupado; }
+	public void setObjetivo(int x, int y){
+		x_objetivo = x;
+		y_objetivo = y;
+	}
+	
+	public double getDistanciaObjetivo(){
+		int a = Math.abs(x_objetivo - x);
+    	int b = Math.abs(y_objetivo - y);
+		
+		return Math.sqrt(a*a + b*b);
+	}
+	
+	public void desocupar(){ 
+		mt = MessageTemplate.MatchConversationId("mina-encontrada");
+		estado = EstadoMinero.ESPERANDO; 
+	}
+	public void ocupar(){ estado = EstadoMinero.OCUPADO; }
 	
 	private class RecibirMensaje extends CyclicBehaviour {
+		
+		private int agentes_restantes = 0;
+		private boolean mas_cercano = true;
 
 		@Override
 		public void action() {
 			
-			if (!ocupado){
-			
+			switch (estado) {
+			case ESPERANDO:
+				// Primer estado. Esperamos a recibir un mensaje de algun explorador.
+				ACLMessage mensaje_explorador = receive(mt);
+				
+				if (mensaje_explorador != null){
+					
+					// Sacamos las coordenadas x,y del mensaje
+					String[] coords = mensaje_explorador.getContent().split(",");
+					int coord1 = Integer.parseInt(coords[0]);
+	            	int coord2 = Integer.parseInt(coords[1]);
+	            	setObjetivo(coord1, coord2);
+	            	
+	            	System.out.println("Minero " + getLocalName() + " - Mensaje recibido: hay un mineral en " + coord1 + ", " + coord2);
+	            	
+	            	// Sacamos el numero de mineros registrados para saber
+	            	// Cuantos mensajes como maximo recibiremos
+	            	DFAgentDescription template = new DFAgentDescription();
+	        		ServiceDescription sd = new ServiceDescription();
+	        		sd.setType("minero");
+	        		template.addServices(sd);
+	        		try {
+	        			DFAgentDescription[] result = DFService.search(myAgent, template);
+	        			agentes_restantes = result.length - 1;
+	        		}
+	        		catch(FIPAException fe){
+	        			fe.printStackTrace();
+	        		}
+					
+					myAgent.addBehaviour(new EvaluarDistancia(coord1, coord2));
+					
+					// Queremos recibir mensajes de ocupado y de distancias
+					mt = MessageTemplate.or(
+							MessageTemplate.MatchConversationId("evaluar-distancia"),
+							MessageTemplate.MatchPerformative(ACLMessage.REFUSE));
+					estado = EstadoMinero.ESCUCHANDO;
+					
+				}
+				else
+					block();
+				break;
+				
+			case ESCUCHANDO:
+				// Segundo estado. Recibimos distancias de los otros mineros.
+				ACLMessage mensaje_minero = receive(mt);
+				
+				if (mensaje_minero != null){
+					System.out.println(getLocalName() + " - He recibido un mensaje de " + mensaje_minero.getSender().getLocalName());
+					
+					if (mensaje_minero.getPerformative() != ACLMessage.REFUSE){
+						double distancia = Double.parseDouble(mensaje_minero.getContent());
+						mas_cercano &= (getDistanciaObjetivo() < distancia);
+					}
+					agentes_restantes--;
+					
+					if (agentes_restantes <= 0){
+						System.out.println(getLocalName() + " - Soy el mas cercano? " + mas_cercano);
+						
+						if (mas_cercano){
+							estado = EstadoMinero.MOVIENDO;
+							addBehaviour(new MovimientoMinero(x_objetivo, y_objetivo));
+						}
+						else
+							desocupar();
+						agentes_restantes = 0;
+						mas_cercano = true;
+					}
+				}
+				else
+					block();
+				break;
+				
+			case MOVIENDO:	
+			case OCUPADO:
+				// Estamos ocupados minando.
 				ACLMessage mensaje = receive();
 				
 				if (mensaje != null){
 					
-					String[] coords = mensaje.getContent().split(",");
-					int coord1 = Integer.parseInt(coords[0]); //coordenada X del mineral (donde esta ahora mismo el explorador)
-	            	int coord2 = Integer.parseInt(coords[1]); //coordenada Y del mineral (donde esta ahora mismo el explorador)
-	            	
-	            	System.out.println("Minero " + getLocalName() + " - Mensaje recibido: hay un mineral en " + coord1 + ", " + coord2);
+					ACLMessage negativa = new ACLMessage(ACLMessage.REFUSE);
+					negativa.setSender(getAID());
+					negativa.addReceiver(mensaje.getSender());
+					send(negativa);
 					
-					myAgent.addBehaviour(new EvaluarDistancia(coord1, coord2));
-					setOcupado(true);
 				}
-				else
+				else 
 					block();
+				break;
+			default:
+				break;
 			}
+			
+			
+			
 		}
 	}
-	
-	class MineroReceptorMensaje extends CyclicBehaviour
-    {
-        private boolean fin = false;
-        //public int x;//posicion del minero en X
-        //public int y;//posicion del minero en Y
-        
-        public void action()
-        {
-            System.out.println(" Preparandose para recibir");
-            int coord1;
-            int coord2;
-            String mineral;
-            
-            Object[] arrayArgumentos = getArguments();//argumentos de la creacion del agente
-            //coords donde empieza el agente
-    		int coordInicial1 = (int)arrayArgumentos[0];
-    		int coordInicial2 = (int)arrayArgumentos[1];
-    		Double distancia = 0.0;
- 
-            //Obtiene el primer mensaje de la cola de mensajes
-            ACLMessage mensajeExplorador = blockingReceive();
- 
-            if (mensajeExplorador!= null)
-            {
-            	String[] coords = mensajeExplorador.getContent().toString().split(",");
-            	String[] tipomineral = coords[1].toString().split(";");
-            	coord1 = Integer.parseInt(coords[0]);//coordenada X del mineral (donde est� ahora mismo el explorador)
-            	coord2 = Integer.parseInt(tipomineral[0]);//coordenada Y del mineral (donde est� ahora mismo el explorador)
-            	mineral = tipomineral[1];//Tipo del mineral de dichas coordenadas
-            	
-            	int x = Math.abs(coord1 - coordInicial1);
-            	int y = Math.abs(coord2 - coordInicial2);
-            	
-            	distancia = Math.sqrt(x*x + y*y);//la distancia entre 2 puntos (entre el minero1 y el agente explorador)
-            	
-	            System.out.println(getLocalName() + ": acaba de recibir el siguiente mensaje: ");
-	            System.out.println(mensajeExplorador.toString());
-	            
-	           // Envia constestaci�n
-                System.out.println(getLocalName() +": Enviando contestacion");
-                ACLMessage respuesta = mensajeExplorador.createReply();
-                respuesta.setPerformative( ACLMessage.INFORM );
-                //respuesta.setContent("Mi posicion: "+coordInicial1+","+coordInicial2);
-                //respuesta.setContent(getLocalName()+";"+distancia+"||"+coord1+","+coord2);
-                
-                onAgentMove(x, y);
-                
-                respuesta.setContent("Mineral de "+mineral+" en la posicion "+coord1+","+coord2+" explotado");
-                send(respuesta);
-                
-	            fin = true;
-            }
-        }
-        /*
-        public boolean done()
-        {
-            return fin;
-        }*/
-    }
 }

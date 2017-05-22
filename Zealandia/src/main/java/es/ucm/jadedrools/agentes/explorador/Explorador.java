@@ -64,6 +64,7 @@ public class Explorador extends ObservableAgent {
 		//addBehaviour(new ExploradorMensaje(mapa, coordInicial1, coordInicial2));
 		addBehaviour(new RecibirMensaje());
 		
+		// Maquina de estados para los behaviours del explorador
 		FSMBehaviour estados = new FSMBehaviour();
 		estados.registerFirstState(new MovimientoBehaviour(mapa), "movimiento");
 		estados.registerLastState(new VolverANave(), "finalizar");

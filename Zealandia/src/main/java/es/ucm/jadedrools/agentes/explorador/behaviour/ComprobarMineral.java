@@ -29,7 +29,7 @@ public class ComprobarMineral extends OneShotBehaviour {
 		hayMineral = !mapa.getCasilla(posX, posY).getMinerales().isEmpty();
 		
 		try {
-			Thread.sleep(1000);
+			Thread.sleep(500);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

@@ -26,15 +26,11 @@ public class EvaluarDistancia extends OneShotBehaviour {
 		// TODO Ponerse de acuerdo con el resto de mineros
 		Minero minero = (Minero)myAgent;
 		
-		int a = Math.abs(x - minero.getX());
-    	int b = Math.abs(y - minero.getY());
-		
-		double distancia = Math.sqrt(a*a + b*b);
-		
-		ACLMessage mensaje = new ACLMessage(ACLMessage.INFORM);
-		// Rellenar los campos necesarios del mensaje
-		mensaje.setSender(minero.getAID());
-		mensaje.setContent(Double.toString(distancia));
+		// Mandamos la distancia a todos los demas mineros
+		ACLMessage informe_distancia = new ACLMessage(ACLMessage.INFORM);
+		informe_distancia.setSender(minero.getAID());
+		informe_distancia.setContent(Double.toString(minero.getDistanciaObjetivo()));
+		informe_distancia.setConversationId("evaluar-distancia");
 		
 		// Sacamos los agentes mineros
 		DFAgentDescription template = new DFAgentDescription();
@@ -44,16 +40,19 @@ public class EvaluarDistancia extends OneShotBehaviour {
 		
 		try {
 			DFAgentDescription[] result = DFService.search(myAgent, template);
-			for (int i = 0; i < result.length; i++)
-				mensaje.addReceiver(result[i].getName());
+			for (int i = 0; i < result.length; i++){
+				if (!result[i].getName().getLocalName().equals(myAgent.getLocalName())){
+					informe_distancia.addReceiver(result[i].getName());
+				}
+			}
 		}
 		catch(FIPAException fe){
 			fe.printStackTrace();
 		}
 		
-		//minero.send(mensaje);
+		minero.send(informe_distancia);
 		
-		myAgent.addBehaviour(new MovimientoMinero(x, y));
+		//myAgent.addBehaviour(new MovimientoMinero(x, y));
 
 	}
 

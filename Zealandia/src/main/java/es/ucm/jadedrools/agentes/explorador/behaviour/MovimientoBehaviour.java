@@ -45,7 +45,7 @@ public class MovimientoBehaviour extends OneShotBehaviour {
 		explorador.onAgentMove(posX + newX, posY + newY);
 		
 		try {
-			Thread.sleep(1000);
+			Thread.sleep(500);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

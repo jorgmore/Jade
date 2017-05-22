@@ -16,13 +16,13 @@ public class ExtraerMineral extends Behaviour {
 		cantidadDebug--;
 		
 		try {
-			Thread.sleep(1000);
+			Thread.sleep(500);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 		
 		if (done())
-			minero.setOcupado(false);
+			minero.desocupar();
 	}
 
 	@Override
