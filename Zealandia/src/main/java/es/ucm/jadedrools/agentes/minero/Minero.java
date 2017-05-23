@@ -17,6 +17,7 @@ import es.ucm.jadedrools.agentes.minero.behaviour.EvaluarDistancia;
 import es.ucm.jadedrools.agentes.minero.behaviour.ExtraerMineral;
 import es.ucm.jadedrools.agentes.minero.behaviour.MovimientoMinero;
 import es.ucm.jadedrools.gui.MapaGui;
+import es.ucm.jadedrools.mapa.Mapa;
 
 public class Minero extends ObservableAgent {
 	
@@ -28,6 +29,8 @@ public class Minero extends ObservableAgent {
 	
 	private EstadoMinero estado;
 	
+	private Mapa mapa;
+	
 	private MessageTemplate mt; // Template para los mensajes que se reciben
 	
 	protected void setup(){
@@ -37,6 +40,8 @@ public class Minero extends ObservableAgent {
 		// coords donde empieza el agente
 		x = x_objetivo = (int) arrayArgumentos[0];
 		y = y_objetivo = (int) arrayArgumentos[1];
+		
+		mapa = (Mapa) arrayArgumentos[2];
 		
 		MapaGui mGui = (MapaGui)arrayArgumentos[3];
 		
@@ -166,7 +171,7 @@ public class Minero extends ObservableAgent {
 						
 						if (mas_cercano){
 							estado = EstadoMinero.MOVIENDO;
-							addBehaviour(new MovimientoMinero(x_objetivo, y_objetivo));
+							addBehaviour(new MovimientoMinero(x_objetivo, y_objetivo, mapa));
 						}
 						else
 							desocupar();

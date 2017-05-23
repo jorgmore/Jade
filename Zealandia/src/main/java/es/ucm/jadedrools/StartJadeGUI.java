@@ -56,6 +56,10 @@ public class StartJadeGUI {
 			mGui.agregarAgenteVisual(ac.getName(), TipoAgente.EXPLORADOR, 10, 5);
 			ac.start();
 			
+			ac = cc.createNewAgent("explorador2", EXPLORADOR_CLASS, new Object[]{10, 5, m, mGui});
+			mGui.agregarAgenteVisual(ac.getName(), TipoAgente.EXPLORADOR, 10, 5);
+			ac.start();
+			
 			// MINEROS
 			
 			ac = cc.createNewAgent("minero1", MINERO_CLASS, new Object[]{1, 0, m, mGui});
