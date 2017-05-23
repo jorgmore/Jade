@@ -11,6 +11,7 @@ import com.sun.accessibility.internal.resources.accessibility;
 import es.ucm.jadedrools.gui.MapaGui;
 import es.ucm.jadedrools.gui.TipoAgente;
 import es.ucm.jadedrools.gui.Ventana;
+import es.ucm.jadedrools.mapa.GestorMapa;
 import es.ucm.jadedrools.mapa.Mapa;
 import jade.core.Profile;
 import jade.core.ProfileImpl;
@@ -33,8 +34,7 @@ public class StartJadeGUI {
 		// Crea un contenedor principal para esta instancia del entorno JADE:
 		ContainerController cc = Runtime.instance().createMainContainer(p);
 
-		Mapa m = new Mapa(100, 100);
-		MapaGui mGui = new MapaGui(m);
+		MapaGui mGui = new MapaGui(GestorMapa.getInstancia().getMapa());
 		
 		Ventana ventana = new Ventana();
 		
@@ -52,26 +52,26 @@ public class StartJadeGUI {
 			 */
 			// EXPLORADORES
 			
-			ac = cc.createNewAgent("explorador1", EXPLORADOR_CLASS, new Object[]{10, 5, m, mGui});
+			ac = cc.createNewAgent("explorador1", EXPLORADOR_CLASS, new Object[]{10, 5, mGui});
 			mGui.agregarAgenteVisual(ac.getName(), TipoAgente.EXPLORADOR, 10, 5);
 			ac.start();
 			
-			ac = cc.createNewAgent("explorador2", EXPLORADOR_CLASS, new Object[]{10, 5, m, mGui});
+			ac = cc.createNewAgent("explorador2", EXPLORADOR_CLASS, new Object[]{10, 5, mGui});
 			mGui.agregarAgenteVisual(ac.getName(), TipoAgente.EXPLORADOR, 10, 5);
 			ac.start();
 			
 			// MINEROS
 			
-			ac = cc.createNewAgent("minero1", MINERO_CLASS, new Object[]{1, 0, m, mGui});
-			mGui.agregarAgenteVisual(ac.getName(), TipoAgente.MINERO, 1, 0);
+			ac = cc.createNewAgent("minero1", MINERO_CLASS, new Object[]{0, 0, mGui});
+			mGui.agregarAgenteVisual(ac.getName(), TipoAgente.MINERO, 0, 0);
 			ac.start();
 			
-			ac = cc.createNewAgent("minero2", MINERO_CLASS, new Object[]{0, 1, m, mGui});
-			mGui.agregarAgenteVisual(ac.getName(), TipoAgente.MINERO, 0, 1);
+			ac = cc.createNewAgent("minero2", MINERO_CLASS, new Object[]{0, 0, mGui});
+			mGui.agregarAgenteVisual(ac.getName(), TipoAgente.MINERO, 0, 0);
 			ac.start();
 			
-			ac = cc.createNewAgent("minero3", MINERO_CLASS, new Object[]{1, 1, m, mGui});
-			mGui.agregarAgenteVisual(ac.getName(), TipoAgente.MINERO, 1, 1);
+			ac = cc.createNewAgent("minero3", MINERO_CLASS, new Object[]{0, 0, mGui});
+			mGui.agregarAgenteVisual(ac.getName(), TipoAgente.MINERO, 0, 0);
 			ac.start();
 			
 		} 

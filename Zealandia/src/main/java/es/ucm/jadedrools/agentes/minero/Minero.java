@@ -11,6 +11,7 @@ import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 import es.ucm.jadedrools.agentes.ObservableAgent;
 import es.ucm.jadedrools.agentes.minero.behaviour.EvaluarDistancia;
@@ -29,8 +30,6 @@ public class Minero extends ObservableAgent {
 	
 	private EstadoMinero estado;
 	
-	private Mapa mapa;
-	
 	private MessageTemplate mt; // Template para los mensajes que se reciben
 	
 	protected void setup(){
@@ -41,9 +40,7 @@ public class Minero extends ObservableAgent {
 		x = x_objetivo = (int) arrayArgumentos[0];
 		y = y_objetivo = (int) arrayArgumentos[1];
 		
-		mapa = (Mapa) arrayArgumentos[2];
-		
-		MapaGui mGui = (MapaGui)arrayArgumentos[3];
+		MapaGui mGui = (MapaGui)arrayArgumentos[2];
 		
 		observers = new Vector<>();
 		registerObserver(mGui);
@@ -107,6 +104,8 @@ public class Minero extends ObservableAgent {
 		
 		private int agentes_restantes = 0;
 		private boolean mas_cercano = true;
+		private Vector<String> empates = new Vector<>();
+		private int random;
 
 		@Override
 		public void action() {
@@ -161,23 +160,88 @@ public class Minero extends ObservableAgent {
 					System.out.println(getLocalName() + " - He recibido un mensaje de " + mensaje_minero.getSender().getLocalName());
 					
 					if (mensaje_minero.getPerformative() != ACLMessage.REFUSE){
+						
 						double distancia = Double.parseDouble(mensaje_minero.getContent());
-						mas_cercano &= (getDistanciaObjetivo() < distancia);
+						double mi_distancia = getDistanciaObjetivo();
+						
+						if (mi_distancia == distancia)
+							empates.add(mensaje_minero.getSender().getLocalName());
+						else
+							mas_cercano &= (mi_distancia < distancia);						
+						
 					}
 					agentes_restantes--;
 					
 					if (agentes_restantes <= 0){
 						System.out.println(getLocalName() + " - Soy el mas cercano? " + mas_cercano);
-						
+
 						if (mas_cercano){
-							estado = EstadoMinero.MOVIENDO;
-							addBehaviour(new MovimientoMinero(x_objetivo, y_objetivo, mapa));
+							
+							// Si ha habido empates, desempatamos y luego vemos
+							if (!empates.isEmpty()){
+								
+								random = ThreadLocalRandom.current().nextInt(0, 1000 + 1);
+								agentes_restantes = empates.size();
+								
+								ACLMessage suertes = new ACLMessage(ACLMessage.PROPOSE);
+								suertes.setSender(getAID());
+								suertes.setContent(String.valueOf(random));
+								suertes.setConversationId("minero-desempate");
+								while (!empates.isEmpty())
+									suertes.addReceiver(new AID(empates.remove(0), AID.ISLOCALNAME));
+								send(suertes);
+								
+								estado = EstadoMinero.DESEMPATANDO;
+								mt = MessageTemplate.and(
+										MessageTemplate.MatchConversationId("minero-desempate"),
+										MessageTemplate.MatchPerformative(ACLMessage.PROPOSE));
+								
+							}
+							// Si no, vamos directos
+							else {
+								estado = EstadoMinero.MOVIENDO;
+								addBehaviour(new MovimientoMinero(x_objetivo, y_objetivo));
+							}
 						}
 						else
 							desocupar();
-						agentes_restantes = 0;
+						
+						empates.clear();
+						mas_cercano = true;
+						
+					}
+				}
+				else
+					block();
+				break;
+				
+			case DESEMPATANDO:
+				// Estado de desempate, esperamos a recibir una respuesta del resto de mineros
+				ACLMessage mensaje_desempate = receive(mt);
+				
+				if (mensaje_desempate != null){
+					
+					int su_random = Integer.parseInt(mensaje_desempate.getContent());
+					System.out.println("El random de " + getLocalName() + ": " + random + 
+							", el de " + mensaje_desempate.getSender().getLocalName() + ": " + su_random);
+					
+					mas_cercano &= (su_random < random);
+					agentes_restantes--;
+					
+					if (agentes_restantes <= 0){
+						
+						if (mas_cercano){
+							
+							estado = EstadoMinero.MOVIENDO;
+							addBehaviour(new MovimientoMinero(x_objetivo, y_objetivo));
+							
+						}
+						else
+							desocupar();
+						
 						mas_cercano = true;
 					}
+					
 				}
 				else
 					block();

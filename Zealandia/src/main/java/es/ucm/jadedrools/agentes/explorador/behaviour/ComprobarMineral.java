@@ -1,6 +1,7 @@
 package es.ucm.jadedrools.agentes.explorador.behaviour;
 
 import es.ucm.jadedrools.agentes.explorador.Explorador;
+import es.ucm.jadedrools.mapa.GestorMapa;
 import es.ucm.jadedrools.mapa.Mapa;
 import jade.core.behaviours.OneShotBehaviour;
 
@@ -10,12 +11,6 @@ public class ComprobarMineral extends OneShotBehaviour {
 	public static final int NO_MINERAL = 1;
 	
 	private boolean hayMineral = false;
-	
-	private Mapa mapa;
-	
-	public ComprobarMineral(Mapa mapa) {
-		this.mapa = mapa;
-	}
 
 	@Override
 	public void action() {
@@ -26,7 +21,7 @@ public class ComprobarMineral extends OneShotBehaviour {
 		int posX = explorador.getX();
 		int posY = explorador.getY();
 		
-		hayMineral = !mapa.getCasilla(posX, posY).getMinerales().isEmpty();
+		hayMineral = !GestorMapa.getInstancia().getMapa().getCasilla(posX, posY).getMinerales().isEmpty();
 		
 		try {
 			Thread.sleep(500);

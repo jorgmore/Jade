@@ -8,13 +8,11 @@ public class MovimientoMinero extends Behaviour {
 	
 	private int x;
 	private int y;
-	private Mapa mapa;
 	
-	public MovimientoMinero(int x, int y, Mapa mapa) {
+	public MovimientoMinero(int x, int y) {
 		
 		this.x = x;
 		this.y = y;
-		this.mapa = mapa;
 	
 	}
 
@@ -66,7 +64,7 @@ public class MovimientoMinero extends Behaviour {
 		// Cuando ha llegado, se pone a picar (Espero)
 		if (done()){
 			System.out.println(minero.getLocalName() + " ha llegado al destino");
-			minero.addBehaviour(new ExtraerMineral(mapa, minero.getX(), minero.getY()));
+			minero.addBehaviour(new ExtraerMineral());
 		}
 		
 		try {
