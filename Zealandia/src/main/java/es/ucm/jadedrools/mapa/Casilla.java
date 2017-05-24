@@ -30,7 +30,7 @@ public class Casilla {
 	}
 	
 	public void minar(int cant, int pos){
-		if (pos > minerales.size())
+		if (pos > minerales.size() || minerales.isEmpty())
 			return;
 		int nuevaCantidad = minerales.get(pos).getCantidad() - cant;
 		if (nuevaCantidad > 0)
