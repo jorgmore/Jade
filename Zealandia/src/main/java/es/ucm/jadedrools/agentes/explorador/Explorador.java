@@ -1,21 +1,7 @@
 package es.ucm.jadedrools.agentes.explorador;
 
-import jade.core.Agent;
-import jade.core.behaviours.SimpleBehaviour;
-import jade.core.AID;
-import jade.core.behaviours.*;
-import jade.lang.acl.ACLMessage;
-import jade.lang.acl.MessageTemplate;
-import jade.domain.DFService;
-import jade.domain.FIPAException;
-import jade.domain.FIPAAgentManagement.DFAgentDescription;
-import jade.domain.FIPAAgentManagement.ServiceDescription;
-
-import java.util.ArrayList;
 import java.util.Vector;
-import java.util.concurrent.ThreadLocalRandom;
 
-import es.ucm.jadedrools.BehExplorador;
 import es.ucm.jadedrools.agentes.ObservableAgent;
 import es.ucm.jadedrools.agentes.explorador.behaviour.AvisarMineros;
 import es.ucm.jadedrools.agentes.explorador.behaviour.ComprobarMineral;
@@ -24,7 +10,13 @@ import es.ucm.jadedrools.agentes.explorador.behaviour.VolverANave;
 import es.ucm.jadedrools.gui.MapaGui;
 import es.ucm.jadedrools.mapa.GestorMapa;
 import es.ucm.jadedrools.mapa.Mapa;
-import es.ucm.jadedrools.mapa.TipoCasilla;
+import jade.core.behaviours.CyclicBehaviour;
+import jade.core.behaviours.FSMBehaviour;
+import jade.domain.DFService;
+import jade.domain.FIPAException;
+import jade.domain.FIPAAgentManagement.DFAgentDescription;
+import jade.domain.FIPAAgentManagement.ServiceDescription;
+import jade.lang.acl.ACLMessage;
 
 public class Explorador extends ObservableAgent {
 	

@@ -51,28 +51,18 @@ public class StartJadeGUI {
 			 *		mGui.agregarAgenteVisual("explorador1", TipoAgente.EXPLORADOR, x, y);
 			 */
 			// EXPLORADORES
-			
-			ac = cc.createNewAgent("explorador1", EXPLORADOR_CLASS, new Object[]{10, 5, mGui});
-			mGui.agregarAgenteVisual(ac.getName(), TipoAgente.EXPLORADOR, 10, 5);
-			ac.start();
-			
-			ac = cc.createNewAgent("explorador2", EXPLORADOR_CLASS, new Object[]{10, 5, mGui});
-			mGui.agregarAgenteVisual(ac.getName(), TipoAgente.EXPLORADOR, 10, 5);
-			ac.start();
+			for (int i = 0; i < 2; i++){
+				ac = cc.createNewAgent("explorador_" + i, EXPLORADOR_CLASS, new Object[]{10, 5, mGui});
+				mGui.agregarAgenteVisual(ac.getName(), TipoAgente.EXPLORADOR, 10, 5);
+				ac.start();
+			}
 			
 			// MINEROS
-			
-			ac = cc.createNewAgent("minero1", MINERO_CLASS, new Object[]{0, 0, mGui});
-			mGui.agregarAgenteVisual(ac.getName(), TipoAgente.MINERO, 0, 0);
-			ac.start();
-			
-			ac = cc.createNewAgent("minero2", MINERO_CLASS, new Object[]{0, 0, mGui});
-			mGui.agregarAgenteVisual(ac.getName(), TipoAgente.MINERO, 0, 0);
-			ac.start();
-			
-			ac = cc.createNewAgent("minero3", MINERO_CLASS, new Object[]{0, 0, mGui});
-			mGui.agregarAgenteVisual(ac.getName(), TipoAgente.MINERO, 0, 0);
-			ac.start();
+			for (int i = 0; i < 3; i++){
+				ac = cc.createNewAgent("minero_" + i, MINERO_CLASS, new Object[]{0, 0, mGui});
+				mGui.agregarAgenteVisual(ac.getName(), TipoAgente.MINERO, 0, 0);
+				ac.start();
+			}
 			
 		} 
 		catch (StaleProxyException e) {
