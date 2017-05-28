@@ -1,0 +1,68 @@
+package es.ucm.jadedrools
+ 
+import es.ucm.jadedrools.mapa.Mapa;
+import es.ucm.jadedrools.mapa.TipoCasilla;
+import es.ucm.jadedrools.mapa.Casilla;
+import es.ucm.jadedrools.agentes.explorador.Explorador;
+
+rule "comprobarMineral"
+    when
+        $exp: Explorador()
+        m : Mapa(m.getCasilla($exp.getX(),$exp.getY()).getMinerales().isEmpty() == false)
+    then
+    	$exp.setEncontradoMineral(true);
+end
+
+rule "comprobarNoHayMineral"
+    when
+        $exp: Explorador()
+        m : Mapa(m.getCasilla($exp.getX(),$exp.getY()).getMinerales().isEmpty() == true)
+    then
+    	$exp.setEncontradoMineral(false);
+end
+
+
+/*
+rule "recorridoProhibido"
+    when
+        $mapa : Mapa()
+        $exp : Explorador()
+        m : Mapa( m.getCasilla($mapa.getX(),$mapa.getY()).getTipo().name() == "PROHIBIDA")
+    then
+        m.setCasillaRecorrida($mapa.getX(),$mapa.getY());
+        update( m );
+end
+
+rule "recorridoNormal"
+    when
+        $mapa : Mapa()
+        m : Mapa( m.getCasilla($mapa.getX(),$mapa.getY()).getTipo().name() == "NORMAL")
+    then
+        m.setCasillaRecorrida($mapa.getX(),$mapa.getY());
+        
+        //Si hay algun mineral
+        if(m.getCasilla($mapa.getX(),$mapa.getY()).getMinerales().size() > 0){
+           for(int i=0; i< m.getCasilla($mapa.getX(),$mapa.getY()).getMinerales().size(); i++){
+		      m.setTieneMineral(true);
+    	   }
+        }
+        update( m );
+end
+
+rule "recorridoPantanoso"
+    when
+        $mapa : Mapa()
+        m : Mapa( m.getCasilla($mapa.getX(),$mapa.getY()).getTipo().name() == "PANTANOSO")
+    then
+        m.setCasillaRecorrida($mapa.getX(),$mapa.getY());
+        
+        //Si hay algun mineral
+        if(m.getCasilla($mapa.getX(),$mapa.getY()).getMinerales().size() > 0){
+	        for(int i=0; i< m.getCasilla($mapa.getX(),$mapa.getY()).getMinerales().size(); i++){
+			   //System.out.println("mineral: "+m.getCasilla($mapa.getX(),$mapa.getY()).getMinerales().elementAt(i).getTipo() );
+			   m.setTieneMineral(true);
+	    	}
+        }
+        update( m );
+end
+*/
