@@ -2,10 +2,17 @@ package es.ucm.jadedrools.gui;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Vector;
 
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 import es.ucm.jadedrools.AgentObserver;
@@ -17,7 +24,11 @@ public class MapaGui extends JPanel implements AgentObserver{
 	private Mapa mapa;
 	private Hashtable<String, AgenteDummy> agentes;
 	
-	private int CASILLA_SIZE = 24;
+	BufferedImage img_explorador = null;
+	BufferedImage img_minero = null;
+	BufferedImage img_transportista = null;
+	
+	private int CASILLA_SIZE = 36;
 
 	public MapaGui(Mapa m) {
 		
@@ -25,17 +36,38 @@ public class MapaGui extends JPanel implements AgentObserver{
 		mapa = m;
 		agentes = new Hashtable<>();
 		
+		try {
+			img_explorador = ImageIO.read(new File("pictures/explorer.png"));
+			img_minero = ImageIO.read(new File("pictures/miner.png"));
+			img_transportista = ImageIO.read(new File("pictures/transport.png"));
+		} catch (IOException e) { System.out.println("Ha petado la imageen!"); }
+		
+		this.addMouseWheelListener(new MouseWheelListener() {
+			
+			@Override
+			public void mouseWheelMoved(MouseWheelEvent e) {
+				if (e.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL) {
+					CASILLA_SIZE += e.getScrollAmount()*-e.getWheelRotation();
+					if (CASILLA_SIZE < 0) CASILLA_SIZE = 0;
+					if (CASILLA_SIZE > 100) CASILLA_SIZE = 100;
+					repaint();
+				}
+				
+			}
+		});
+		
 	}
 	
 	@Override
-	public void paint(Graphics g) {
+	protected void paintComponent(Graphics g) {
+		super.paintComponent(g);
 		
 		for (int i = 0; i < mapa.getAncho(); i++){
 			for (int j = 0; j < mapa.getAlto(); j++){
 			
 				switch (mapa.getCasilla(i, j).getTipo()) {
 				case NORMAL:
-					g.setColor(Color.green);
+					g.setColor(new Color(82, 181, 0));
 					break;
 				case PANTANOSO:
 					g.setColor(new Color(145, 104, 21));
@@ -65,46 +97,81 @@ public class MapaGui extends JPanel implements AgentObserver{
 						break;
 					}
 					
-					g.fillOval(i*CASILLA_SIZE + 6, j*CASILLA_SIZE + 6, CASILLA_SIZE/2, CASILLA_SIZE/2);
+					g.fillOval(
+							i*CASILLA_SIZE + CASILLA_SIZE/4, 
+							j*CASILLA_SIZE + CASILLA_SIZE/4, 
+							CASILLA_SIZE/2, 
+							CASILLA_SIZE/2);
 				}
 				
 				ArrayList<AgenteDummy> arr = new ArrayList<>(agentes.values());
 				
 				for (AgenteDummy agente: arr){
 					
+					BufferedImage img = null;
+					
 					switch (agente.getTipo()) {
 					case EXPLORADOR:
-						g.setColor(new Color(69, 247, 232));
+						img = img_explorador;
 						break;
 					case MINERO:
-						g.setColor(new Color(189, 145, 255));
+						img = img_minero;
 						break;
 					case TRANSPORTISTA:
-						g.setColor(new Color(255, 229, 0));
+						img = img_transportista;
 						break;
 					default:
 						break;
 					}
 					
-					g.drawString("X", agente.getX()*CASILLA_SIZE + 6, agente.getY()*CASILLA_SIZE - 6);
-					
+					if (img != null){
+						
+						int dstx1 = agente.getX()*CASILLA_SIZE;
+						int dsty1 = agente.getY()*CASILLA_SIZE;
+						int dstx2 = agente.getX()*CASILLA_SIZE + CASILLA_SIZE;
+						int dsty2 = agente.getY()*CASILLA_SIZE + CASILLA_SIZE;
+						
+						int srcx1 = 0;
+						int srcy1 = 0;
+						int srcx2 = img.getWidth();
+						int srcy2 = img.getHeight();
+						
+						g.drawImage(img, dstx1, dsty1, dstx2, dsty2, srcx1, srcy1, srcx2, srcy2, this);
+						
+					}
 				}
 			}
 		}
 	}
 	
-	public void agregarAgenteVisual(String nombreAgente, TipoAgente tipo, int x, int y, Mapa m){
+	@Override
+	public void paint(Graphics g) {
+		super.paint(g);
+		paintComponent(g);
+	}
+	
+	public void agregarAgenteVisual(String nombreAgente, TipoAgente tipo, int x, int y){
 		
-		agentes.put(nombreAgente, new AgenteDummy(tipo, x, y, m));
+		agentes.put(nombreAgente, new AgenteDummy(tipo, x, y));
 		
 	}
 	
 	@Override
 	public void onAgentMoved(String nombreAgente, int x, int y) {
 		
-		agentes.get(nombreAgente).setX(x);
-		agentes.get(nombreAgente).setY(y);
-		
+		javax.swing.SwingUtilities.invokeLater(new Runnable() {
+			
+			@Override
+			public void run() {
+				AgenteDummy a = agentes.get(nombreAgente);
+				
+				a.setX(x);
+				a.setY(y);
+				
+				agentes.put(nombreAgente, a);
+				
+				repaint();
+			}
+		});
 	}
-
 }

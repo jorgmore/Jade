@@ -11,12 +11,16 @@ import com.sun.accessibility.internal.resources.accessibility;
 import es.ucm.jadedrools.gui.MapaGui;
 import es.ucm.jadedrools.gui.TipoAgente;
 import es.ucm.jadedrools.gui.Ventana;
+import es.ucm.jadedrools.mapa.GestorMapa;
 import es.ucm.jadedrools.mapa.Mapa;
 import jade.core.Profile;
 import jade.core.ProfileImpl;
 import jade.core.ProfileException;
 
 public class StartJadeGUI {
+	
+	public static final String EXPLORADOR_CLASS = "es.ucm.jadedrools.agentes.explorador.Explorador";
+	public static final String MINERO_CLASS = "es.ucm.jadedrools.agentes.minero.Minero";
 	
 	public static void main(String args[]) {
 
@@ -30,10 +34,11 @@ public class StartJadeGUI {
 		// Crea un contenedor principal para esta instancia del entorno JADE:
 		ContainerController cc = Runtime.instance().createMainContainer(p);
 
-		Mapa m = new Mapa(100, 100, 0, 0);
-		MapaGui mGui = new MapaGui(m);
+		MapaGui mGui = new MapaGui(GestorMapa.getInstancia().getMapa());
 		
 		Ventana ventana = new Ventana();
+		
+		AgentController ac;
 		
 		try {
 			
@@ -44,24 +49,25 @@ public class StartJadeGUI {
 			 *  	Si no se puede hacer asi, pasarselo como argumentos o algo asi
 			 *  - Pasarselo a mGui para que se les pueda representar visualmente
 			 *		mGui.agregarAgenteVisual("explorador1", TipoAgente.EXPLORADOR, x, y);
-			 */	
-			AgentController ac = cc.createNewAgent("explorador1", "es.ucm.jadedrools.Explorador", new Object[]{10, 5, m});
-			mGui.agregarAgenteVisual("explorador1", TipoAgente.EXPLORADOR, 10, 5, m);
-			ac.start();
+			 */
+			// EXPLORADORES
+			for (int i = 0; i < 2; i++){
+				ac = cc.createNewAgent("explorador_" + i, EXPLORADOR_CLASS, new Object[]{10, 5, mGui});
+				mGui.agregarAgenteVisual(ac.getName(), TipoAgente.EXPLORADOR, 10, 5);
+				ac.start();
+			}
 			
-			ac = cc.createNewAgent("minero1", "es.ucm.jadedrools.Minero", new Object[]{11, 5, m});
-			mGui.agregarAgenteVisual("minero1", TipoAgente.MINERO, 11, 5, m);
-			ac.start();
-			
-			//ac = cc.createNewAgent("minero2", "es.ucm.jadedrools.Minero", new Object[]{12, 5, m});
-			//mGui.agregarAgenteVisual("minero2", TipoAgente.MINERO, 12, 5, m);
-			//ac.start();
+			// MINEROS
+			for (int i = 0; i < 3; i++){
+				ac = cc.createNewAgent("minero_" + i, MINERO_CLASS, new Object[]{0, 0, mGui});
+				mGui.agregarAgenteVisual(ac.getName(), TipoAgente.MINERO, 0, 0);
+				ac.start();
+			}
 			
 		} 
 		catch (StaleProxyException e) {
 			e.printStackTrace();
 		}
-		
 		
 		ventana.setMapaGui(mGui);
 		

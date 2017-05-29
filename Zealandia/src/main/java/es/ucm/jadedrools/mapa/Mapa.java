@@ -17,17 +17,11 @@ public class Mapa {
 	private Casilla [][]casillas;
 	private int ancho;
 	private int alto;
-	private int x;
-	private int y;
-	private boolean TieneMineral;
 	
-	public Mapa(int ancho, int alto, int x, int y){
+	public Mapa(int ancho, int alto){
 		
 		this.ancho = ancho;
 		this.alto = alto;
-		this.x = x;
-		this.y = y;
-		this.TieneMineral = false;
 		casillas = new Casilla[ancho][alto];
 		
 		for (int i = 0; i < ancho; i++){
@@ -36,7 +30,7 @@ public class Mapa {
 				casillas[i][j] = new Casilla();
 				
 				// Hacemos un random para ver que tipo de casilla es y si contiene algo
-				int tipoCasilla = ThreadLocalRandom.current().nextInt(0, 2 + 1);		
+				int tipoCasilla = ThreadLocalRandom.current().nextInt(0, 20 + 1);		
 				if (tipoCasilla == 1)
 					casillas[i][j].setTipo(TipoCasilla.PANTANOSO);
 				else if (tipoCasilla == 2)
@@ -44,13 +38,14 @@ public class Mapa {
 				
 				if (casillas[i][j].getTipo() != TipoCasilla.PROHIBIDA){
 				
-					int mineral = ThreadLocalRandom.current().nextInt(0, 10 + 1);
+					int mineral = ThreadLocalRandom.current().nextInt(0, 50 + 1);
+					int cantidad = ThreadLocalRandom.current().nextInt(0, 50 + 1);
 					if (mineral == 1)
-						casillas[i][j].setMineral(new Mineral(TipoMineral.COBRE, 10));
+						casillas[i][j].setMineral(new Mineral(TipoMineral.COBRE, cantidad));
 					else if (mineral == 2)
-						casillas[i][j].setMineral(new Mineral(TipoMineral.PLATA, 10));
+						casillas[i][j].setMineral(new Mineral(TipoMineral.PLATA, cantidad));
 					else if (mineral == 3)
-						casillas[i][j].setMineral(new Mineral(TipoMineral.ORO, 10));
+						casillas[i][j].setMineral(new Mineral(TipoMineral.ORO, cantidad));
 					
 				}
 			}
@@ -61,23 +56,7 @@ public class Mapa {
 	
 	public int getAlto(){ return alto; }
 	
-	public int getX(){ return x; }
-	
-	public int getY(){ return y; }
-	
-	public void setX(int x){
-		this.x = x;
-	}
-	
-	public void setY(int y){
-		this.y = y;
-	}
-	
 	public Casilla getCasilla(int x, int y){ return casillas[x][y]; }
-	
-	public void setCasillaRecorrida(int x, int y){
-		this.casillas[x][y].setCasillaRecorrida();
-	}
 	
 	public void setMineral(int x, int y, Mineral m){ 
 		
@@ -85,11 +64,9 @@ public class Mapa {
 		
 	}
 	
-	public void setTieneMineral(boolean tiene){
-		this.TieneMineral = tiene;
-	}
-	
-	public boolean getTieneMineral(){
-		return this.TieneMineral;
+	public boolean enRango(int x, int y){
+		
+		return x > 0 && x < ancho && y > 0 && y < alto && casillas[x][y].getTipo() != TipoCasilla.PROHIBIDA;
+		
 	}
 }

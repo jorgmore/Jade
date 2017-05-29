@@ -4,6 +4,7 @@
 	<classpathentry kind="src" path="src/main/resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Jade"/>
+	<classpathentry kind="lib" path="/home/rodry/Universidad/Master/DASI/jade/lib/jade.jar"/>
+	<classpathentry kind="lib" path="/home/rodry/Universidad/Master/DASI/jade/lib/commons-codec/commons-codec-1.3.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

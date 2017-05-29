@@ -1,6 +1,8 @@
 package es.ucm.jadedrools.gui;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
@@ -14,11 +16,10 @@ public class Ventana {
 	public Ventana(){
 		
 		ventana = new JFrame("Zealandia");
+		ventana.setLayout(new GridLayout());
 		ventana.setVisible(true);
 		ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		ventana.setMinimumSize(new Dimension(700, 700));
-		//ventana.setMaximumSize(new Dimension(700, 700));
-		//ventana.setResizable(false);
 		ventana.setLocation(0, 0);
 		
 		ventana.pack();
@@ -28,9 +29,12 @@ public class Ventana {
 	public void setMapaGui(MapaGui m){
 		
 		if (ventana != null){
-			//JScrollPane scrPane = new JScrollPane(m);
-			//ventana.add(scrPane); // similar to getContentPane().add(scrPane);
-			ventana.add(m);
+			JScrollPane scrPane = new JScrollPane(m);
+			scrPane.getViewport().setPreferredSize(ventana.getSize());
+			ventana.add(scrPane); // similar to getContentPane().add(scrPane);
+			ventana.pack();
+			
+			//ventana.add(m);
 		}
 	}
 }

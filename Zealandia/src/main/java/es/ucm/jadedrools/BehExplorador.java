@@ -28,8 +28,8 @@ public class BehExplorador {
 	    kSession = kContainer.newKieSession("ksession-rules");
 
 	   // go !
-	    mapa.setX(x);
-	    mapa.setY(y);
+	    //mapa.setX(x);
+	    //mapa.setY(y);
         kSession.insert(mapa);
         action();
 	}
