@@ -34,7 +34,16 @@ public class MovimientoMinero extends Behaviour {
 			BehMinero behMin2 = new BehMinero(minero, GestorMapa.getInstancia().getMapa());
 		}
 		
-		minero.onAgentMove(minero.getX(), minero.getY());
+		if(minero.getBase() == 3){
+			minero.onAgentMove(minero.getXNave(), minero.getYNave());
+			minero.setBase(1);
+		}
+		else {
+			if(minero.getX()== minero.getX_objetivo() && minero.getY()== minero.getY_objetivo()){
+				minero.setBase(minero.getBase() + 1);
+			}
+			minero.onAgentMove(minero.getX(), minero.getY());
+		}
 		
 		System.out.println(
 				"Minero " + minero.getLocalName() + 

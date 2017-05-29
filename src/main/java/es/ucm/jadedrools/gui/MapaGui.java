@@ -40,7 +40,7 @@ public class MapaGui extends JPanel implements AgentObserver{
 			img_explorador = ImageIO.read(new File("pictures/explorer.png"));
 			img_minero = ImageIO.read(new File("pictures/miner.png"));
 			img_transportista = ImageIO.read(new File("pictures/transport.png"));
-		} catch (IOException e) { System.out.println("Ha petado la imageen!"); }
+		} catch (IOException e) { System.out.println("Ha petado la imagen!"); }
 		
 		this.addMouseWheelListener(new MouseWheelListener() {
 			
@@ -75,6 +75,9 @@ public class MapaGui extends JPanel implements AgentObserver{
 				case PROHIBIDA:
 					g.setColor(new Color(90, 60, 0));
 					break;
+				case NAVE:
+					g.setColor(new Color(255, 0, 0));
+					break;	
 				default:
 					break;
 				}

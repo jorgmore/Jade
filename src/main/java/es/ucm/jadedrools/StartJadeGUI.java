@@ -28,6 +28,8 @@ public class StartJadeGUI {
 		Properties props = new ExtendedProperties();
 		props.setProperty(Profile.GUI, "true");// Para arrancar con el GUI de la plataforma
 		ProfileImpl p = new ProfileImpl(props);// Profile con la propiedad de tener GUI
+		int xNave = 1;
+		int yNave = 0;
 		
 		// Arranca un sistema JADE
 		// Indica que cuando se cierre el �ltimo contenedor, se cierre la JVM:
@@ -53,26 +55,26 @@ public class StartJadeGUI {
 			 */
 			// EXPLORADORES
 			for (int i = 0; i < 2; i++){
-				ac = cc.createNewAgent("explorador_" + i, EXPLORADOR_CLASS, new Object[]{10, 5, mGui});
-				mGui.agregarAgenteVisual(ac.getName(), TipoAgente.EXPLORADOR, 10, 5);
+				ac = cc.createNewAgent("explorador_" + i, EXPLORADOR_CLASS, new Object[]{xNave, yNave, mGui});
+				mGui.agregarAgenteVisual(ac.getName(), TipoAgente.EXPLORADOR, xNave, yNave);
 				ac.start();
 			}
 			
 			// MINEROS
 			for (int i = 0; i < 3; i++){
-				ac = cc.createNewAgent("minero_" + i, MINERO_CLASS, new Object[]{0, 0, mGui});
-				mGui.agregarAgenteVisual(ac.getName(), TipoAgente.MINERO, 0, 0);
+				ac = cc.createNewAgent("minero_" + i, MINERO_CLASS, new Object[]{xNave, yNave, mGui});
+				mGui.agregarAgenteVisual(ac.getName(), TipoAgente.MINERO, xNave, yNave);
 				ac.start();
 			}
 			
 			// TRANSPORTISTAS
 			for (int i = 0; i < 2; i++){
-				ac = cc.createNewAgent("transportista_" + i, TRANSPORTISTA_CLASS, new Object[]{0, 0, mGui});
-				mGui.agregarAgenteVisual(ac.getName(), TipoAgente.TRANSPORTISTA, 0, 0);
+				ac = cc.createNewAgent("transportista_" + i, TRANSPORTISTA_CLASS, new Object[]{xNave, yNave, mGui});
+				mGui.agregarAgenteVisual(ac.getName(), TipoAgente.TRANSPORTISTA, xNave, yNave);
 				ac.start();
 			}
-			
-		} 
+			//CAMBIAR EN ES.UCM.JADEDROOLS.MAPA EL MAPA.JAVA PARA LA POSICION DE LA NAVE, linea 53
+		}
 		catch (StaleProxyException e) {
 			e.printStackTrace();
 		}

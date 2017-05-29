@@ -33,6 +33,11 @@ public class Minero extends ObservableAgent {
 	private EstadoMinero estado;
 	private MessageTemplate mt; // Template para los mensajes que se reciben
 	
+	private int base = 1;
+	
+	private int xNave;
+	private int yNave;
+	
 	protected void setup(){
 		Object[] arrayArgumentos = getArguments();//argumentos de la creacion del agente
 		
@@ -41,6 +46,9 @@ public class Minero extends ObservableAgent {
 		y = y_objetivo = (int) arrayArgumentos[1];
 		
 		MapaGui mGui = (MapaGui)arrayArgumentos[2];
+		
+		xNave = (int) arrayArgumentos[0];
+		yNave = (int) arrayArgumentos[1];
 		
 		observers = new Vector<>();
 		registerObserver(mGui);
@@ -94,6 +102,22 @@ public class Minero extends ObservableAgent {
 	public void setObjetivo(int x, int y){
 		x_objetivo = x;
 		y_objetivo = y;
+	}
+	
+	public void setBase(int base){
+		this.base = base;
+	}
+	
+	public int getBase(){
+		return this.base;
+	}
+	
+	public int getXNave(){
+		return this.xNave;
+	}
+	
+	public int getYNave(){
+		return this.yNave;
 	}
 	
 	public double getDistanciaObjetivo(){

@@ -27,14 +27,23 @@ public class MovimientoTransportista extends Behaviour {
 		
 		BehTransportista behTrans = new BehTransportista(transportista, GestorMapa.getInstancia().getMapa());
 		
-		while(GestorMapa.getInstancia().getMapa().getCasilla(transportista.getX(),transportista.getY()).getTipo().name() == "PROHIBIDA"){//mientras sea prohibida, vuelve a intentar moverte a otro lado
+		while(GestorMapa.getInstancia().getMapa().getCasilla(transportista.getX(),transportista.getY()).getTipo().name() == "PROHIBIDA"){//mientras sea prohibida, vuelve a intentar moverte a otra casilla
 			transportista.setX_mov(this.x + 1);
 			transportista.setY_mov(this.y + 1);
 			
 			BehTransportista behTrans2 = new BehTransportista(transportista, GestorMapa.getInstancia().getMapa());
 		}
 		
-		transportista.onAgentMove(transportista.getX(), transportista.getY());
+		if(transportista.getBase() == 2){
+			transportista.onAgentMove(transportista.getXNave(), transportista.getYNave());
+			transportista.setBase(1);
+		}
+		else {
+			if(transportista.getX()== transportista.getX_objetivo() && transportista.getY()== transportista.getY_objetivo()){
+				transportista.setBase(transportista.getBase() + 1);
+			}
+			transportista.onAgentMove(transportista.getX(), transportista.getY());
+		}
 		
 		System.out.println(
 				"Transportista " + transportista.getLocalName() + 

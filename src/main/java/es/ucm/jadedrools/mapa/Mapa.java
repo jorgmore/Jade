@@ -50,6 +50,7 @@ public class Mapa {
 				}
 			}
 		}
+		casillas[1][0].setTipo(TipoCasilla.NAVE);//Se cambia aqui la posicion de la nave
 	}
 	
 	public int getAncho(){ return ancho; }

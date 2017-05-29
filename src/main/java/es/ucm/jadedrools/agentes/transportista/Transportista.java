@@ -30,6 +30,11 @@ public class Transportista extends ObservableAgent {
 	private int x_mov;
 	private int y_mov;
 	
+	private int base = 1;
+	
+	private int xNave;
+	private int yNave;
+	
 	private EstadoTransportista estado;
 	
 	private MessageTemplate mt; // Template para los mensajes que se reciben
@@ -43,6 +48,9 @@ public class Transportista extends ObservableAgent {
 		y = y_objetivo = (int) arrayArgumentos[1];
 		
 		MapaGui mGui = (MapaGui)arrayArgumentos[2];
+		
+		xNave = (int) arrayArgumentos[0];
+		yNave = (int) arrayArgumentos[1];
 		
 		observers = new Vector<>();
 		registerObserver(mGui);
@@ -90,6 +98,9 @@ public class Transportista extends ObservableAgent {
 	public void setX_mov(int x){ this.x_mov = x; }
 	public void setY_mov(int y){ this.y_mov = y; }
 	
+	public int getX_objetivo(){ return x_objetivo; }
+	public int getY_objetivo(){ return y_objetivo; }
+	
 	public void setObjetivo(int x, int y){
 		x_objetivo = x;
 		y_objetivo = y;
@@ -107,6 +118,22 @@ public class Transportista extends ObservableAgent {
 		estado = EstadoTransportista.ESPERANDO;
 	}
 	public void ocupar(){ estado = EstadoTransportista.OCUPADO; }
+	
+	public void setBase(int base){
+		this.base = base;
+	}
+	
+	public int getBase(){
+		return this.base;
+	}
+	
+	public int getXNave(){
+		return this.xNave;
+	}
+	
+	public int getYNave(){
+		return this.yNave;
+	}
 	
 	private class RecibirMensajeDeMinero extends CyclicBehaviour {
 		private int agentes_restantes = 0;
