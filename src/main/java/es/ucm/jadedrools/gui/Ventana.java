@@ -2,14 +2,12 @@ package es.ucm.jadedrools.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.GridLayout;
+
 import javax.swing.JButton;
-import javax.swing.JPanel;
-
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-
-import es.ucm.jadedrools.mapa.Mapa;
+import javax.swing.UIManager;
 
 public class Ventana {
 	
@@ -21,27 +19,17 @@ public class Ventana {
 	
 	public Ventana(){
 		
+		try {
+			UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
+	    } 
+	    catch (Exception e) {}
+		
 		ventana = new JFrame("Zealandia");
-		ventana.setLayout(new GridLayout());
+		ventana.setLayout(new BorderLayout());
 		ventana.setVisible(true);
 		ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		ventana.setMinimumSize(new Dimension(700, 700));
 		//ventana.setLocation(0, 0);
-		
-		
-		p = new JPanel();
-		//p.setLayout(new GridLayout());
-		b1 = new JButton("Stop/Go");
-		
-		p.add(b1);
-		//ventana.add(p);
-		p.setLocation(1,0);
-		b1.setBounds(0, 500, 100, 100);
-		//ventana.add(p);
-		
-		b1.addActionListener(null
-			
-		);
 		
 		ventana.pack();
 		
@@ -52,10 +40,17 @@ public class Ventana {
 		if (ventana != null){
 			JScrollPane scrPane = new JScrollPane(m);
 			scrPane.getViewport().setPreferredSize(ventana.getSize());
-			ventana.add(scrPane); // similar to getContentPane().add(scrPane);
+			ventana.add(scrPane, BorderLayout.CENTER); // similar to getContentPane().add(scrPane);
 			ventana.pack();
 			
 			//ventana.add(m);
+		}
+	}
+	
+	public void setControllerGui(ControllerGUI c){
+		if (ventana != null){
+			ventana.add(c, BorderLayout.SOUTH);
+			ventana.pack();
 		}
 	}
 }

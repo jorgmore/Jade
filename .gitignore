@@ -49,3 +49,4 @@ Zealandia/.recommenders/
 Zealandia/.cache-main
 Zealandia/.scala_dependencies
 Zealandia/.worksheet
+/target/

@@ -6,8 +6,11 @@ import jade.wrapper.AgentController;
 import jade.wrapper.ContainerController;
 import jade.wrapper.StaleProxyException;
 
+import java.util.ArrayList;
+
 import com.sun.accessibility.internal.resources.accessibility;
 
+import es.ucm.jadedrools.gui.ControllerGUI;
 import es.ucm.jadedrools.gui.MapaGui;
 import es.ucm.jadedrools.gui.TipoAgente;
 import es.ucm.jadedrools.gui.Ventana;
@@ -41,7 +44,7 @@ public class StartJadeGUI {
 		
 		Ventana ventana = new Ventana();
 		
-		AgentController ac;
+		ArrayList<AgentController> agentes = new ArrayList<>();
 		
 		try {
 			
@@ -55,23 +58,23 @@ public class StartJadeGUI {
 			 */
 			// EXPLORADORES
 			for (int i = 0; i < 2; i++){
-				ac = cc.createNewAgent("explorador_" + i, EXPLORADOR_CLASS, new Object[]{xNave, yNave, mGui});
-				mGui.agregarAgenteVisual(ac.getName(), TipoAgente.EXPLORADOR, xNave, yNave);
-				ac.start();
+				agentes.add(cc.createNewAgent("explorador_" + i, EXPLORADOR_CLASS, new Object[]{xNave, yNave, mGui}));
+				mGui.agregarAgenteVisual(agentes.get(agentes.size()-1).getName(), TipoAgente.EXPLORADOR, xNave, yNave);
+				agentes.get(agentes.size()-1).start();
 			}
 			
 			// MINEROS
 			for (int i = 0; i < 3; i++){
-				ac = cc.createNewAgent("minero_" + i, MINERO_CLASS, new Object[]{xNave, yNave, mGui});
-				mGui.agregarAgenteVisual(ac.getName(), TipoAgente.MINERO, xNave, yNave);
-				ac.start();
+				agentes.add(cc.createNewAgent("minero_" + i, MINERO_CLASS, new Object[]{xNave, yNave, mGui}));
+				mGui.agregarAgenteVisual(agentes.get(agentes.size()-1).getName(), TipoAgente.MINERO, xNave, yNave);
+				agentes.get(agentes.size()-1).start();
 			}
 			
 			// TRANSPORTISTAS
 			for (int i = 0; i < 2; i++){
-				ac = cc.createNewAgent("transportista_" + i, TRANSPORTISTA_CLASS, new Object[]{xNave, yNave, mGui});
-				mGui.agregarAgenteVisual(ac.getName(), TipoAgente.TRANSPORTISTA, xNave, yNave);
-				ac.start();
+				agentes.add(cc.createNewAgent("transportista_" + i, TRANSPORTISTA_CLASS, new Object[]{xNave, yNave, mGui}));
+				mGui.agregarAgenteVisual(agentes.get(agentes.size()-1).getName(), TipoAgente.TRANSPORTISTA, xNave, yNave);
+				agentes.get(agentes.size()-1).start();
 			}
 			//CAMBIAR EN ES.UCM.JADEDROOLS.MAPA EL MAPA.JAVA PARA LA POSICION DE LA NAVE, linea 53
 		}
@@ -79,7 +82,10 @@ public class StartJadeGUI {
 			e.printStackTrace();
 		}
 		
+		ControllerGUI controller = new ControllerGUI(agentes);
+		
 		ventana.setMapaGui(mGui);
+		ventana.setControllerGui(controller);
 		
 	}
 }
