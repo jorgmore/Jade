@@ -12,10 +12,6 @@ import javax.swing.UIManager;
 public class Ventana {
 	
 	private JFrame ventana;
-	private JButton b1;
-	private JPanel p;
-	JPanel pnlButton = new JPanel();
-	JButton btnAddFlight = new JButton("Stop/Go");
 	
 	public Ventana(){
 		
